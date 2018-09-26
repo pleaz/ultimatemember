@@ -2583,6 +2583,25 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					// add options
 					if ( ! empty( $options ) ) {
+                        $my_opinion = null;
+                        foreach ( $options as $k => $v ) {
+                            $v = rtrim( $v );
+                            $option_value = $v;
+                            if ( ! is_numeric( $k ) && in_array( $form_key, array( 'role' ) ) ||
+                                ( $this->set_mode == 'account' || um_is_core_page( 'account' ) ) ) {
+                                $option_value = $k;
+                            }
+                            if (isset( $options_pair )) {
+                                $option_value = $k;
+                            }
+                            $option_value = $this->filter_field_non_utf8_value( $option_value );
+                            if ($this->field_value( $form_key, $option_value, $data) == $option_value) {
+                                $my_opinion = $option_value;
+                            }
+                        }
+                        if($my_opinion == 'Zimbabwe') {
+                            $my_opinion = null;
+                        }
 						foreach ( $options as $k => $v ) {
 
 							$v = rtrim( $v );
@@ -2612,6 +2631,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							} else if (!isset( $options_pair ) && $this->is_selected( $form_key, $v, $data )) {
 								$output .= 'selected';
 								$field_value = $v;
+							} else if ($option_value == $my_opinion) {
+								$output .= 'selected';
+								$field_value = $option_value;
 							}
 
 							$output .= '>' . __( $um_field_checkbox_item_title, 'ultimate-member' ) . '</option>';
@@ -2790,7 +2812,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 							$output .= '<option value="' . $opt_value . '" ';
 							if ($this->is_selected( $key, $opt_value, $data )) {
-
+								$output .= 'selected';
+								$arr_selected[$opt_value] = $opt_value;
+							} else if ($this->field_value( $key, $opt_value, $data)[0] == $opt_value) {
 								$output .= 'selected';
 								$arr_selected[$opt_value] = $opt_value;
 							}

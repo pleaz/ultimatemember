@@ -201,7 +201,7 @@ function um_check_user_status( $user_id, $args ) {
 			}
 
 			if ( um_user( 'auto_approve_act' ) == 'redirect_profile' ) {
-				exit( wp_redirect( um_user_profile_url() ) );
+				exit( wp_redirect( um_user_profile_url() . '?profiletab=main&um_action=edit' ) );
 			}
 
 		}
